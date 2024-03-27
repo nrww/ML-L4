@@ -451,14 +451,14 @@ class Adam(VanillaGradientDescent):
             Разность весов (w_{k + 1} - w_k).
         """
         self.m = self.beta_1 * self.m + (1 - self.beta_1) * gradient
-        self.v = self.beta_2 + (1 - self.beta_2) * np.power(gradient, 2)
+        self.v = self.beta_2 * self.v + (1 - self.beta_2) * np.power(gradient, 2)
         
         lr = self.lr() # для того что бы на первом шаге не было деления на ноль
         m = self.m / (1 - np.power(self.beta_1, self.lr.iteration))
         v = self.v / (1 - np.power(self.beta_2, self.lr.iteration))
         delta_w = lr / np.sqrt(v + self.eps) * m
         self.w -= delta_w
-        return delta_w
+        return -delta_w
 
 
 class BaseDescentReg(BaseDescent):

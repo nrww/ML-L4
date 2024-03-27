@@ -73,6 +73,7 @@ class LinearRegression:
             
             if np.isnan(self.descent.w).any():
                 self.iteration = epoch + 1 
+                
                 return self
             if np.linalg.norm(delta_w) < self.tolerance:
                 self.iteration = epoch + 1 
