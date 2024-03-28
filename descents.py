@@ -269,7 +269,7 @@ class VanillaGradientDescent(BaseDescent):
         if self.loss_function is LossFunction.MSE:
             return 2 * x.T @ (x @ self.w - y) / y.shape[0]
         elif self.loss_function is LossFunction.LogCosh:
-            return x.T @ np.tanh(x @ self.w - y)
+            return x.T @ np.tanh(x @ self.w - y) / y.shape[0]
         else:
             raise NotImplementedError()
         
