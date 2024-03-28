@@ -199,7 +199,9 @@ class BaseDescent:
         float
             Значение функции потерь.
         """
+        
         return np.mean(np.power((self.predict(x) - y), 2))
+        
         
     def predict(self, x: np.ndarray) -> np.ndarray:
         """
@@ -264,7 +266,13 @@ class VanillaGradientDescent(BaseDescent):
         np.ndarray
             Градиент функции потерь по весам.
         """
-        return 2 / y.shape[0] * x.T @ (x @ self.w - y)
+        if self.loss_function is LossFunction.MSE:
+            return 2 * x.T @ (x @ self.w - y) / y.shape[0]
+        elif self.loss_function is LossFunction.LogCosh:
+            return x.T @ np.tanh(x @ self.w - y)
+        else:
+            raise NotImplementedError()
+        
 
 
 class StochasticDescent(VanillaGradientDescent):
@@ -509,9 +517,8 @@ class BaseDescentReg(BaseDescent):
         np.ndarray
             Градиент функции потерь с учетом L2 регуляризации по весам.
         """
-        l2_gradient: np.ndarray = np.zeros_like(x.shape[1])  
-
-        return super().calc_gradient(x, y) + l2_gradient * self.mu
+        
+        return super().calc_gradient(x, y) + self.w * self.mu
 
 
 class VanillaGradientDescentReg(BaseDescentReg, VanillaGradientDescent):
